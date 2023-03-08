@@ -4,13 +4,10 @@ library(rsconnect)
 
 data <- read_delim("UAH-lower-troposphere-long.csv.bz2")
 
-# Define the UI
 ui <- fluidPage(
-  # Application title
   titlePanel("My Shiny App"),
   
   tabsetPanel(
-    # General Info
     tabPanel("General Info",
              p("This app uses satellite temperature data from",
                strong("UAH")),
@@ -25,8 +22,6 @@ ui <- fluidPage(
                dataTableOutput("sampleMain")
              )
     ),
-    
-    # Plot
     tabPanel("plot",
              sidebarLayout(
                sidebarPanel(
@@ -43,8 +38,6 @@ ui <- fluidPage(
                )
              )
     ),
-    
-    # Table
     tabPanel("Tables",
              sidebarLayout(
                sidebarPanel(
@@ -64,8 +57,6 @@ ui <- fluidPage(
   )
   
 )
-
-# Define the server
 server <- function(input, output) {
   output$sampleMain <- renderDataTable({
     data[sample(nrow(data), 10), ]
@@ -74,10 +65,6 @@ server <- function(input, output) {
   output$plot <- renderPlot({
     dataFiltered <- data %>% filter(region %in% input$region)
     print(dataFiltered)
-    
-    # plot the data
-    # x axis is the year-month
-    # add a random color to each filtered region
     p <- ggplot(dataFiltered, aes(x = month, y = temp, color = region)) +
       geom_point() +
       labs(x = "Year-Month", y = "Temperature (deg C)", color = "Region")
